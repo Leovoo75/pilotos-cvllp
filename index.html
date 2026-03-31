@@ -2,727 +2,242 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Parapente Finance - Gestão Financeira</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parapente Finance - Gestão Oficial</title>
     
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #1a472a 0%, #2a5a3a 100%);
-            min-height: 100vh;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #0f2b1a 0%, #1e3a2a 100%);
-            color: white;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header h1 {
-            font-size: 1.3rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        .user-info {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 0.8rem;
-            background: rgba(255,255,255,0.2);
-            padding: 5px 12px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .user-info button {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            font-size: 0.8rem;
-            padding: 0;
-        }
-
-        .user-info button:hover {
-            text-decoration: underline;
-        }
-
-        .subtitle {
-            text-align: center;
-            font-size: 0.8rem;
-            opacity: 0.9;
-            margin-top: 5px;
-        }
-
-        .sync-status {
-            text-align: center;
-            font-size: 0.6rem;
-            margin-top: 5px;
-            color: #a5d6a5;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            background: white;
-            padding: 10px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 80px;
-            z-index: 99;
-        }
-
-        .tab-btn {
-            background: #e8f0e8;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 30px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #1a472a;
-            font-size: 0.9rem;
-            flex: 1;
-            justify-content: center;
-        }
-
-        .tab-btn.active {
-            background: #1a472a;
-            color: white;
-        }
-
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .card {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border: 1px solid #e0e8e0;
-        }
-
-        .card h3 {
-            color: #1a472a;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-left: 4px solid #1a472a;
-            padding-left: 12px;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: #2c5a3a;
-        }
-
-        input, select, textarea {
-            padding: 10px 12px;
-            border: 1px solid #c0d0c0;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: #1a472a;
-            box-shadow: 0 0 0 3px rgba(26,71,42,0.1);
-        }
-
-        button {
-            background: #1a472a;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-size: 0.9rem;
-            min-height: 44px;
-        }
-
-        button:hover:not(:disabled) {
-            background: #2a5a3a;
-            transform: translateY(-1px);
-        }
-
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .btn-success { background: #27ae60; }
-        .btn-danger { background: #c0392b; }
-        .btn-info { background: #2980b9; }
-        .btn-warning { background: #f39c12; }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, #1a472a, #2e6b3e);
-            color: white;
-            padding: 20px;
-            border-radius: 16px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card i {
-            position: absolute;
-            right: 15px;
-            bottom: 15px;
-            font-size: 2.5rem;
-            opacity: 0.2;
-        }
-
-        .stat-card h4 {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-        }
-
-        .stat-card .value {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        .table-container {
-            overflow-x: auto;
-            margin-top: 10px;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.8rem;
-            min-width: 600px;
-        }
-
-        th, td {
-            padding: 12px 10px;
-            border-bottom: 1px solid #e0e8e0;
-            text-align: left;
-        }
-
-        th {
-            background: #f0f5f0;
-            font-weight: 600;
-            position: sticky;
-            top: 0;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-
-        .badge-receita { background: #d4edda; color: #155724; }
-        .badge-despesa { background: #f8d7da; color: #721c24; }
-        .badge-piloto { background: #cce5ff; color: #004085; }
-
-        .filter-bar {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 15px;
-            align-items: flex-end;
-        }
-
-        .filter-item {
-            flex: 1;
-            min-width: 140px;
-        }
-
-        .chart-container {
-            max-height: 300px;
-            margin: 20px 0;
-        }
-
-        canvas {
-            max-height: 250px;
-            width: 100%;
-        }
-
-        #authOverlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #0f2b1a, #1e3a2a);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-
-        .auth-box {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-            min-width: 320px;
-        }
-
-        .auth-box input, .auth-box select {
-            width: 100%;
-            margin: 10px 0;
-            padding: 12px;
-            border-radius: 8px;
-            border: none;
-            text-align: center;
-            font-size: 16px;
-        }
-
-        .auth-box button {
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #27ae60;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 30px;
-            z-index: 1000;
-            font-size: 0.8rem;
-            white-space: nowrap;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 20px;
-            padding: 25px;
-            max-width: 500px;
-            width: 90%;
-        }
-
-        .total-soma {
-            background: #f0f5f0;
-            padding: 12px 15px;
-            border-radius: 8px;
-            font-weight: bold;
-            text-align: right;
-            margin-top: 15px;
-            font-size: 1rem;
-        }
-
-        @media (max-width: 768px) {
-            .form-grid, .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            .filter-bar {
-                flex-direction: column;
-            }
-            .filter-item {
-                width: 100%;
-            }
-            .tab-btn {
-                padding: 8px 12px;
-                font-size: 0.75rem;
-            }
-            .user-info {
-                position: relative;
-                top: 0;
-                right: 0;
-                justify-content: center;
-                margin-top: 10px;
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background: #0f2b1a; color: #333; min-height: 100vh; }
+        
+        /* Overlay de Login */
+        #authOverlay { position: fixed; inset: 0; background: linear-gradient(135deg, #0f2b1a, #1e3a2a); z-index: 9999; display: flex; align-items: center; justify-content: center; color: white; }
+        .auth-box { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 40px; border-radius: 20px; text-align: center; width: 100%; max-width: 380px; border: 1px solid rgba(255,255,255,0.2); }
+        .auth-box input, .auth-box select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; font-size: 1rem; text-align: center; }
+        
+        /* Layout Principal */
+        .header { background: #0f2b1a; color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        
+        /* Tabs e Botões */
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab-btn { padding: 12px 25px; border: none; border-radius: 30px; cursor: pointer; background: rgba(255,255,255,0.1); color: white; font-weight: bold; transition: 0.3s; }
+        .tab-btn.active { background: #27ae60; color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        button { cursor: pointer; padding: 12px 20px; border-radius: 8px; border: none; font-weight: bold; background: #27ae60; color: white; transition: 0.3s; }
+        button:hover { background: #2ecc71; }
+        
+        /* Dashboard Stats */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 25px; }
+        .stat-card { padding: 25px; border-radius: 15px; color: white; text-align: center; }
+        .bg-revenue { background: #27ae60; }
+        .bg-expense { background: #e74c3c; }
+        .bg-balance { background: #2980b9; }
+        
+        /* Tabelas */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
 
 <div id="authOverlay">
     <div class="auth-box">
-        <i class="fas fa-parachute-box" style="font-size: 3rem; margin-bottom: 15px;"></i>
+        <i class="fas fa-parachute-box" style="font-size: 3.5rem; margin-bottom: 15px;"></i>
         <h2>Parapente Finance</h2>
-        <p>Gestão Financeira para Pilotos</p>
+        <p style="margin-bottom: 20px; opacity: 0.8;">Gestão Financeira para Pilotos</p>
         <select id="userType">
             <option value="admin">Administrador</option>
-            <option value="pilot">Piloto</option>
+            <option value="pilot">Piloto (Apenas Leitura)</option>
         </select>
-        <input type="password" id="pinInput" placeholder="Digite a senha" autocomplete="off">
-        <button onclick="login()"><i class="fas fa-lock"></i> Acessar Sistema</button>
-        </div>
+        <input type="password" id="pinInput" placeholder="Sua senha secreta">
+        <button onclick="login()" style="width: 100%">Acessar Sistema</button>
+    </div>
 </div>
 
 <div id="mainApp" style="display: none;">
     <div class="header">
-        <h1><i class="fas fa-parachute-box"></i> Parapente Finance</h1>
-        <div class="user-info">
-            <i class="fas fa-user-circle"></i> <span id="userName">Carregando...</span>
-            <button onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</button>
-        </div>
-        <div class="subtitle">Controle Financeiro do Grupo de Pilotos</div>
-        <div class="sync-status" id="syncStatus"><i class="fas fa-check-circle"></i> Sistema Pronto</div>
+        <h3><i class="fas fa-wind"></i> Dashboard Parapente</h3>
+        <div><span id="displayUser"></span> <button onclick="location.reload()" style="background: #e74c3c; margin-left: 10px; padding: 5px 15px;">Sair</button></div>
     </div>
 
     <div class="container">
         <div class="tabs">
-            <button class="tab-btn active" data-tab="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</button>
-            <button class="tab-btn" data-tab="pilots" id="tabPilots"><i class="fas fa-users"></i> Pilotos</button>
-            <button class="tab-btn" data-tab="transactions"><i class="fas fa-exchange-alt"></i> Lançamentos</button>
-            <button class="tab-btn" data-tab="reports"><i class="fas fa-chart-line"></i> Relatórios</button>
+            <button class="tab-btn active" onclick="showTab('dashboard')">Visão Geral</button>
+            <button class="tab-btn" onclick="showTab('pilotos')">Equipe/Pilotos</button>
+            <button class="tab-btn" onclick="showTab('financeiro')">Lançamentos</button>
         </div>
 
         <div id="dashboard" class="tab-content active">
             <div class="stats-grid">
-                <div class="stat-card">
-                    <h4>Receitas Totais</h4>
-                    <div class="value" id="totalRevenue">R$ 0,00</div>
-                    <i class="fas fa-arrow-up"></i>
-                </div>
-                <div class="stat-card">
-                    <h4>Despesas Totais</h4>
-                    <div class="value" id="totalExpense">R$ 0,00</div>
-                    <i class="fas fa-arrow-down"></i>
-                </div>
-                <div class="stat-card">
-                    <h4>Saldo Total</h4>
-                    <div class="value" id="totalBalance">R$ 0,00</div>
-                    <i class="fas fa-wallet"></i>
-                </div>
+                <div class="stat-card bg-revenue"><h4>Total Entradas</h4><div id="totalRevenue" style="font-size: 1.8rem; font-weight: bold;">R$ 0,00</div></div>
+                <div class="stat-card bg-expense"><h4>Total Saídas</h4><div id="totalExpense" style="font-size: 1.8rem; font-weight: bold;">R$ 0,00</div></div>
+                <div class="stat-card bg-balance"><h4>Saldo Atual</h4><div id="totalBalance" style="font-size: 1.8rem; font-weight: bold;">R$ 0,00</div></div>
             </div>
-
-            <div class="card">
-                <h3><i class="fas fa-chart-line"></i> Análise Mensal</h3>
-                <div class="filter-bar">
-                    <div class="filter-item">
-                        <label>Ano</label>
-                        <select id="yearFilter" onchange="updateDashboard()">
-                            <option value="2024">2024</option>
-                            <option value="2025" selected>2025</option>
-                            <option value="2026">2026</option>
-                        </select>
-                    </div>
-                    <div class="filter-item">
-                        <label>Piloto</label>
-                        <select id="dashboardPilotFilter" onchange="updateDashboard()">
-                            <option value="all">Todos os Pilotos</option>
-                        </select>
-                    </div>
-                    <div class="filter-item">
-                        <button onclick="updateDashboard()" class="btn-info">Atualizar</button>
-                    </div>
-                </div>
-                <div class="chart-container">
-                    <canvas id="monthlyChart"></canvas>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3><i class="fas fa-clock"></i> Últimos Lançamentos</h3>
-                <div class="table-container">
-                    <table id="recentTable">
-                        <thead>
-                            <tr><th>Data</th><th>Piloto</th><th>Descrição</th><th>Categoria</th><th>Valor</th><th>Tipo</th></tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </div>
+            <div class="card"><h3>Distribuição Financeira</h3><canvas id="mainChart" height="120"></canvas></div>
         </div>
 
-        <div id="pilots" class="tab-content">
-            <div class="card" id="pilotsAddCard">
-                <h3><i class="fas fa-user-plus"></i> Novo Piloto</h3>
+        <div id="pilotos" class="tab-content">
+            <div class="card" id="adminPilotForm">
+                <h3>Novo Piloto</h3>
                 <div class="form-grid">
-                    <div class="form-group"><label>Nome Completo</label><input type="text" id="pilotName" placeholder="Ex: João Silva"></div>
-                    <div class="form-group"><label>CPF</label><input type="text" id="pilotCpf" placeholder="000.000.000-00"></div>
-                    <div class="form-group"><label>Telefone</label><input type="text" id="pilotPhone" placeholder="(11) 99999-9999"></div>
-                    <div class="form-group"><label>E-mail</label><input type="email" id="pilotEmail" placeholder="piloto@email.com"></div>
+                    <input type="text" id="pName" placeholder="Nome do Piloto">
+                    <input type="text" id="pPhone" placeholder="Telefone/WhatsApp">
+                    <button onclick="savePilot()">Cadastrar</button>
                 </div>
-                <button onclick="addPilot()" class="btn-success" id="addPilotBtn"><i class="fas fa-save"></i> Cadastrar Piloto</button>
             </div>
-
             <div class="card">
-                <h3><i class="fas fa-users"></i> Lista de Pilotos</h3>
-                <div class="table-container">
-                    <table id="pilotsTable">
-                        <thead>
-                            <tr><th>Nome</th><th>CPF</th><th>Telefone</th><th>E-mail</th><th>Status</th><th id="pilotsActionsHeader">Ações</th></tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-                <div id="pilotsCount" style="text-align: right; margin-top: 10px; font-size: 0.7rem; color: #666;"></div>
+                <table id="pilotTable"><thead><tr><th>Nome</th><th>Telefone</th><th>Ação</th></tr></thead><tbody></tbody></table>
             </div>
         </div>
 
-        <div id="transactions" class="tab-content">
-            <div class="card" id="transactionAddCard">
-                <h3><i class="fas fa-plus-circle"></i> Novo Lançamento</h3>
+        <div id="financeiro" class="tab-content">
+            <div class="card" id="adminFinanceForm">
+                <h3>Registrar Movimentação</h3>
                 <div class="form-grid">
-                    <div class="form-group"><label>Data</label><input type="date" id="txDate"></div>
-                    <div class="form-group"><label>Piloto</label><select id="txPilot"></select></div>
-                    <div class="form-group"><label>Descrição</label><input type="text" id="txDesc" placeholder="Ex: Inscrição Campeonato"></div>
-                    <div class="form-group"><label>Categoria</label><select id="txCategory"><option>Mensalidade</option><option>Inscrição</option><option>Equipamento</option><option>Manutenção</option><option>Viagem</option><option>Outros</option></select></div>
-                    <div class="form-group"><label>Tipo</label><select id="txType"><option value="RECEITA">Receita (Entrada)</option><option value="DESPESA">Despesa (Saída)</option></select></div>
-                    <div class="form-group"><label>Valor R$</label><input type="number" id="txValue" step="0.01" placeholder="0,00"></div>
-                </div>
-                <button onclick="saveTransaction()" class="btn-success" id="saveTransactionBtn"><i class="fas fa-save"></i> SALVAR LANÇAMENTO</button>
-            </div>
-
-            <div class="card">
-                <h3><i class="fas fa-filter"></i> Filtros</h3>
-                <div class="filter-bar">
-                    <div class="filter-item"><label>Data Início</label><input type="date" id="filterStart"></div>
-                    <div class="filter-item"><label>Data Fim</label><input type="date" id="filterEnd"></div>
-                    <div class="filter-item"><label>Piloto</label><select id="filterPilot"><option value="">Todos</option></select></div>
-                    <div class="filter-item"><label>Tipo</label><select id="filterType"><option value="">Todos</option><option value="RECEITA">Receitas</option><option value="DESPESA">Despesas</option></select></div>
-                    <div class="filter-item"><label>Categoria</label><select id="filterCategory"><option value="">Todas</option><option>Mensalidade</option><option>Inscrição</option><option>Equipamento</option><option>Manutenção</option><option>Viagem</option><option>Outros</option></select></div>
-                    <div class="filter-item"><button onclick="applyFilters()"><i class="fas fa-search"></i> Filtrar</button><button onclick="clearFilters()"><i class="fas fa-undo"></i> Limpar</button></div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>Lista de Lançamentos</h3>
-                <div class="table-container">
-                    <table id="transTable">
-                        <thead>
-                            <tr><th>Data</th><th>Piloto</th><th>Descrição</th><th>Categoria</th><th>Valor</th><th>Tipo</th><th id="transActionsHeader">Ações</th></tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-                <div id="totalFiltrado" class="total-soma">💰 Saldo Total: R$ 0,00</div>
-            </div>
-        </div>
-
-        <div id="reports" class="tab-content">
-            <div class="card">
-                <h3><i class="fas fa-chart-pie"></i> Relatórios Financeiros</h3>
-                <div class="filter-bar">
-                    <div class="filter-item"><label>Data Início</label><input type="date" id="reportStart"></div>
-                    <div class="filter-item"><label>Data Fim</label><input type="date" id="reportEnd"></div>
-                    <div class="filter-item"><label>Piloto</label><select id="reportPilot"><option value="all">Todos os Pilotos</option></select></div>
-                    <div class="filter-item">
-                        <button onclick="exportToExcel()" class="btn-info"><i class="fas fa-file-excel"></i> Excel</button>
-                        <button onclick="exportToJSON()" class="btn-warning"><i class="fas fa-code"></i> JSON</button>
-                    </div>
+                    <input type="date" id="fDate">
+                    <select id="fPilot"></select>
+                    <input type="text" id="fDesc" placeholder="Descrição (Ex: Mensalidade)">
+                    <input type="number" id="fValue" placeholder="Valor R$">
+                    <select id="fType"><option value="RECEITA">Entrada (+)</option><option value="DESPESA">Saída (-)</option></select>
+                    <button onclick="saveTransaction()">Lançar</button>
                 </div>
             </div>
             <div class="card">
-                <h3><i class="fas fa-chart-bar"></i> Despesas por Categoria</h3>
-                <div class="chart-container">
-                    <canvas id="categoryChart"></canvas>
-                </div>
+                <table id="financeTable"><thead><tr><th>Data</th><th>Piloto</th><th>Descrição</th><th>Valor</th><th>Ação</th></tr></thead><tbody></tbody></table>
             </div>
         </div>
     </div>
 </div>
 
-<script>
-    // Configuração de usuários
-    const USERS = {
-        admin: { password: "1234", name: "Administrador", role: "admin" },
-        pilot: { password: "5678", name: "Piloto", role: "pilot" }
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    // Configuração oficial do seu projeto gestaovdi2026
+    const firebaseConfig = {
+        apiKey: "AIzaSyCHUwcyZO3nR3U2dNAOQQMkKRY7myiMXNc",
+        authDomain: "gestaovdi2026.firebaseapp.com",
+        projectId: "gestaovdi2026",
+        storageBucket: "gestaovdi2026.firebasestorage.app",
+        messagingSenderId: "870730305342",
+        appId: "1:870730305342:web:b329cb693ee289cac4666f",
+        measurementId: "G-2ZXSB38Y0L"
     };
-    
-    let currentUser = null;
-    let pilots = [];
-    let transactions = [];
 
-    // ==================== AUTENTICAÇÃO ====================
-    function login() {
-        const userType = document.getElementById("userType").value;
-        const password = document.getElementById("pinInput").value;
-        
-        if (USERS[userType] && USERS[userType].password === password) {
-            currentUser = USERS[userType];
-            document.getElementById("authOverlay").style.display = "none";
-            document.getElementById("mainApp").style.display = "block";
-            document.getElementById("userName").innerHTML = currentUser.name;
-            applyPermissions();
-            loadData();
-        } else {
-            // CORRIGIDO: Mensagem genérica sem revelar as senhas
-            alert("Acesso Negado: Senha incorreta para o perfil selecionado.");
-            document.getElementById("pinInput").value = "";
-            document.getElementById("pinInput").focus();
-        }
-    }
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-    // Atalho para entrar com a tecla Enter
-    document.getElementById("pinInput").addEventListener("keypress", (e) => {
-        if (e.key === "Enter") login();
-    });
-    
-    function logout() {
-        currentUser = null;
-        document.getElementById("authOverlay").style.display = "flex";
-        document.getElementById("mainApp").style.display = "none";
-        document.getElementById("pinInput").value = "";
-        document.getElementById("userType").value = "admin";
-    }
-    
-    function applyPermissions() {
-        const isAdmin = currentUser && currentUser.role === "admin";
-        document.getElementById("pilotsAddCard").style.display = isAdmin ? "block" : "none";
-        document.getElementById("pilotsActionsHeader").style.display = isAdmin ? "table-cell" : "none";
-        document.getElementById("transactionAddCard").style.display = isAdmin ? "block" : "none";
-        document.getElementById("transActionsHeader").style.display = isAdmin ? "table-cell" : "none";
-    }
+    const USERS = { admin: "1234", pilot: "5678" };
+    let myChart = null;
+    let userRole = '';
 
-    // ==================== FUNÇÕES DE DADOS (SIMPLIFICADAS) ====================
-    function loadData() {
-        const storedPilots = localStorage.getItem("parapente_pilots");
-        pilots = storedPilots ? JSON.parse(storedPilots) : [
-            { id: "1", name: "João Silva", cpf: "123.456.789-00", phone: "(11) 99999-1111", email: "joao@email.com" },
-            { id: "2", name: "Maria Santos", cpf: "987.654.321-00", phone: "(11) 99999-2222", email: "maria@email.com" }
-        ];
-
-        const storedTransactions = localStorage.getItem("parapente_transactions");
-        transactions = storedTransactions ? JSON.parse(storedTransactions) : [];
-
-        renderPilots();
-        renderPilotSelects();
-        updateDashboard();
-    }
-
-    function renderPilots() {
-        const tbody = document.querySelector("#pilotsTable tbody");
-        tbody.innerHTML = '';
-        pilots.forEach(p => {
-            const row = tbody.insertRow();
-            row.insertCell(0).innerText = p.name;
-            row.insertCell(1).innerText = p.cpf;
-            row.insertCell(2).innerText = p.phone;
-            row.insertCell(3).innerText = p.email;
-            row.insertCell(4).innerHTML = '<span class="badge badge-piloto">Ativo</span>';
-            if(currentUser.role === 'admin') {
-                row.insertCell(5).innerHTML = `<button class="btn-danger" onclick="deletePilot('${p.id}')">Excluir</button>`;
+    window.login = function() {
+        const type = document.getElementById('userType').value;
+        const pass = document.getElementById('pinInput').value;
+        if (pass === USERS[type]) {
+            userRole = type;
+            document.getElementById('authOverlay').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            document.getElementById('displayUser').innerText = "Olá, " + type.toUpperCase();
+            if(type === 'pilot') {
+                document.getElementById('adminPilotForm').style.display = 'none';
+                document.getElementById('adminFinanceForm').style.display = 'none';
             }
+            loadData();
+        } else { alert("Acesso Negado! Senha incorreta."); }
+    };
+
+    window.showTab = function(tabId) {
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+        if(tabId === 'dashboard') loadData();
+    };
+
+    async function loadData() {
+        // Carregar Pilotos
+        const pSnap = await getDocs(collection(db, "pilotos"));
+        const tbodyP = document.querySelector('#pilotTable tbody');
+        const fSelect = document.getElementById('fPilot');
+        tbodyP.innerHTML = ''; fSelect.innerHTML = '';
+        
+        pSnap.forEach(d => {
+            const p = { id: d.id, ...d.data() };
+            tbodyP.innerHTML += `<tr><td>${p.name}</td><td>${p.phone}</td>
+                <td>${userRole === 'admin' ? `<button onclick="deleteDocItem('pilotos','${p.id}')" style="background:#c0392b">Excluir</button>` : '-'}</td></tr>`;
+            fSelect.innerHTML += `<option value="${p.name}">${p.name}</option>`;
         });
+
+        // Carregar Financeiro
+        const fSnap = await getDocs(collection(db, "transacoes"));
+        const tbodyF = document.querySelector('#financeTable tbody');
+        tbodyF.innerHTML = '';
+        let rev = 0, exp = 0;
+
+        fSnap.forEach(d => {
+            const t = { id: d.id, ...d.data() };
+            const isRev = t.type === 'RECEITA';
+            if(isRev) rev += Number(t.val); else exp += Number(t.val);
+            
+            tbodyF.innerHTML += `<tr><td>${t.date}</td><td>${t.pilot}</td><td>${t.desc}</td>
+                <td style="color:${isRev ? '#27ae60' : '#e74c3c'}; font-weight:bold">R$ ${Number(t.val).toFixed(2)}</td>
+                <td>${userRole === 'admin' ? `<button onclick="deleteDocItem('transacoes','${t.id}')" style="background:#c0392b">Excluir</button>` : '-'}</td></tr>`;
+        });
+
+        updateUI(rev, exp);
     }
 
-    function renderPilotSelects() {
-        const selects = ["txPilot", "filterPilot", "dashboardPilotFilter", "reportPilot"];
-        selects.forEach(id => {
-            const el = document.getElementById(id);
-            if (!el) return;
-            const currentVal = el.value;
-            el.innerHTML = id.includes('filter') || id.includes('report') || id.includes('dashboard') ? '<option value="all">Todos</option>' : '';
-            pilots.forEach(p => {
-                el.innerHTML += `<option value="${p.id}">${p.name}</option>`;
-            });
-            el.value = currentVal || el.value;
+    window.savePilot = async function() {
+        const name = document.getElementById('pName').value;
+        const phone = document.getElementById('pPhone').value;
+        if(!name) return alert("Preencha o nome!");
+        await addDoc(collection(db, "pilotos"), { name, phone });
+        document.getElementById('pName').value = '';
+        loadData();
+    };
+
+    window.saveTransaction = async function() {
+        const date = document.getElementById('fDate').value;
+        const pilot = document.getElementById('fPilot').value;
+        const desc = document.getElementById('fDesc').value;
+        const val = document.getElementById('fValue').value;
+        const type = document.getElementById('fType').value;
+        if(!date || !val) return alert("Preencha data e valor!");
+        await addDoc(collection(db, "transacoes"), { date, pilot, desc, val: Number(val), type });
+        loadData();
+    };
+
+    window.deleteDocItem = async function(col, id) {
+        if(confirm("Deseja realmente remover este registro?")) {
+            await deleteDoc(doc(db, col, id));
+            loadData();
+        }
+    };
+
+    function updateUI(rev, exp) {
+        document.getElementById('totalRevenue').innerText = `R$ ${rev.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+        document.getElementById('totalExpense').innerText = `R$ ${exp.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+        document.getElementById('totalBalance').innerText = `R$ ${(rev - exp).toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+        
+        const ctx = document.getElementById('mainChart').getContext('2d');
+        if(myChart) myChart.destroy();
+        myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Ganhos', 'Gastos'],
+                datasets: [{ label: 'R$', data: [rev, exp], backgroundColor: ['#27ae60', '#e74c3c'] }]
+            },
+            options: { plugins: { legend: { display: false } } }
         });
     }
-
-    function updateDashboard() {
-        const revenue = transactions.filter(t => t.type === 'RECEITA').reduce((a, b) => a + b.value, 0);
-        const expense = transactions.filter(t => t.type === 'DESPESA').reduce((a, b) => a + b.value, 0);
-        document.getElementById("totalRevenue").innerText = `R$ ${revenue.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-        document.getElementById("totalExpense").innerText = `R$ ${expense.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-        document.getElementById("totalBalance").innerText = `R$ ${(revenue - expense).toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-    }
-
-    // Tabs logic
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.tab-btn, .tab-content').forEach(el => el.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById(btn.dataset.tab).classList.add('active');
-        });
-    });
-
 </script>
 </body>
 </html>
