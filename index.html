@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Parapente Finance - Gestão Financeira</title>
     
-    <!-- Bibliotecas -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -462,7 +461,6 @@
             <button class="tab-btn" data-tab="reports"><i class="fas fa-chart-line"></i> Relatórios</button>
         </div>
 
-        <!-- Dashboard Tab -->
         <div id="dashboard" class="tab-content active">
             <div class="stats-grid">
                 <div class="stat-card">
@@ -513,14 +511,14 @@
                 <div class="table-container">
                     <table id="recentTable">
                         <thead>
-                            58<th>Data</th><th>Piloto</th><th>Descrição</th><th>Categoria</th><th>Valor</th><th>Tipo</th>
+                            <tr><th>Data</th><th>Piloto</th><th>Descrição</th><th>Categoria</th><th>Valor</th><th>Tipo</th></tr>
                         </thead>
                         <tbody></tbody>
-                     </div>
+                    </table>
+                </div>
             </div>
         </div>
 
-        <!-- Pilots Tab -->
         <div id="pilots" class="tab-content">
             <div class="card" id="pilotsAddCard">
                 <h3><i class="fas fa-user-plus"></i> Novo Piloto</h3>
@@ -538,15 +536,15 @@
                 <div class="table-container">
                     <table id="pilotsTable">
                         <thead>
-                            58<th>Nome</th><th>CPF</th><th>Telefone</th><th>E-mail</th><th>Status</th><th id="pilotsActionsHeader">Ações</th>
+                            <tr><th>Nome</th><th>CPF</th><th>Telefone</th><th>E-mail</th><th>Status</th><th id="pilotsActionsHeader">Ações</th></tr>
                         </thead>
                         <tbody></tbody>
-                     </div>
+                    </table>
+                </div>
                 <div id="pilotsCount" style="text-align: right; margin-top: 10px; font-size: 0.7rem; color: #666;"></div>
             </div>
         </div>
 
-        <!-- Transactions Tab -->
         <div id="transactions" class="tab-content">
             <div class="card" id="transactionAddCard">
                 <h3><i class="fas fa-plus-circle"></i> Novo Lançamento</h3>
@@ -578,15 +576,15 @@
                 <div class="table-container">
                     <table id="transTable">
                         <thead>
-                            58<th>Data</th><th>Piloto</th><th>Descrição</th><th>Categoria</th><th>Valor</th><th>Tipo</th><th id="transActionsHeader">Ações</th>
+                            <tr><th>Data</th><th>Piloto</th><th>Descrição</th><th>Categoria</th><th>Valor</th><th>Tipo</th><th id="transActionsHeader">Ações</th></tr>
                         </thead>
                         <tbody></tbody>
-                     </div>
+                    </table>
+                </div>
                 <div id="totalFiltrado" class="total-soma">💰 Saldo Total: R$ 0,00</div>
             </div>
         </div>
 
-        <!-- Reports Tab -->
         <div id="reports" class="tab-content">
             <div class="card">
                 <h3><i class="fas fa-chart-pie"></i> Relatórios Financeiros</h3>
@@ -596,7 +594,6 @@
                     <div class="filter-item"><label>Piloto</label><select id="reportPilot"><option value="all">Todos os Pilotos</option></select></div>
                     <div class="filter-item">
                         <button onclick="exportToExcel()" class="btn-info"><i class="fas fa-file-excel"></i> Excel</button>
-                        <button onclick="exportToJSON()" class="btn-warning"><i class="fas fa-code"></i> JSON</button>
                     </div>
                 </div>
             </div>
@@ -610,7 +607,6 @@
     </div>
 </div>
 
-<!-- Modal Editar Piloto -->
 <div id="editPilotModal" class="modal">
     <div class="modal-content">
         <h3>Editar Piloto</h3>
@@ -622,12 +618,11 @@
     </div>
 </div>
 
-<!-- Modal Editar Lançamento -->
 <div id="editTransactionModal" class="modal">
     <div class="modal-content">
         <h3>Editar Lançamento</h3>
         <div class="form-group"><label>Data</label><input type="date" id="editDate"></div>
-        <div class="form-group"><label>Piloto</label><select id="editPilot"></select></div>
+        <div class="form-group"><label>Piloto</label><select id="editPilotSelect"></select></div>
         <div class="form-group"><label>Descrição</label><input type="text" id="editDesc"></div>
         <div class="form-group"><label>Categoria</label><select id="editCategory"><option>Mensalidade</option><option>Inscrição</option><option>Equipamento</option><option>Manutenção</option><option>Viagem</option><option>Outros</option></select></div>
         <div class="form-group"><label>Tipo</label><select id="editType"><option value="RECEITA">Receita</option><option value="DESPESA">Despesa</option></select></div>
@@ -637,7 +632,6 @@
 </div>
 
 <script>
-    // Configuração de usuários - SENHAS NÃO SÃO EXIBIDAS EM NENHUM LUGAR
     const USERS = {
         admin: { password: "1234", name: "Administrador", role: "admin" },
         pilot: { password: "5678", name: "Piloto", role: "pilot" }
@@ -651,7 +645,7 @@
     let monthlyChart = null;
     let categoryChart = null;
 
-    // ==================== AUTENTICAÇÃO ====================
+    // Login
     function login() {
         const userType = document.getElementById("userType").value;
         const password = document.getElementById("pinInput").value;
@@ -664,485 +658,303 @@
             applyPermissions();
             loadData();
         } else {
-            alert("Senha incorreta! Tente novamente.");
+            alert("Senha incorreta!");
             document.getElementById("pinInput").value = "";
-            document.getElementById("pinInput").focus();
         }
     }
-    
+
     function logout() {
         currentUser = null;
         document.getElementById("authOverlay").style.display = "flex";
         document.getElementById("mainApp").style.display = "none";
         document.getElementById("pinInput").value = "";
-        document.getElementById("userType").value = "admin";
     }
-    
+
     function applyPermissions() {
         const isAdmin = currentUser && currentUser.role === "admin";
-        
-        const pilotsAddCard = document.getElementById("pilotsAddCard");
-        const addPilotBtn = document.getElementById("addPilotBtn");
-        const pilotsActionsHeader = document.getElementById("pilotsActionsHeader");
-        const transactionAddCard = document.getElementById("transactionAddCard");
-        const saveTransactionBtn = document.getElementById("saveTransactionBtn");
-        const transActionsHeader = document.getElementById("transActionsHeader");
-        
-        if (pilotsAddCard) pilotsAddCard.style.display = isAdmin ? "block" : "none";
-        if (addPilotBtn) addPilotBtn.disabled = !isAdmin;
-        if (pilotsActionsHeader) pilotsActionsHeader.style.display = isAdmin ? "table-cell" : "none";
-        if (transactionAddCard) transactionAddCard.style.display = isAdmin ? "block" : "none";
-        if (saveTransactionBtn) saveTransactionBtn.disabled = !isAdmin;
-        if (transActionsHeader) transActionsHeader.style.display = isAdmin ? "table-cell" : "none";
+        document.getElementById("pilotsAddCard").style.display = isAdmin ? "block" : "none";
+        document.getElementById("transactionAddCard").style.display = isAdmin ? "block" : "none";
+        document.getElementById("pilotsActionsHeader").style.display = isAdmin ? "table-cell" : "none";
+        document.getElementById("transActionsHeader").style.display = isAdmin ? "table-cell" : "none";
     }
 
-    // ==================== CARREGAR DADOS ====================
+    // Gerenciamento de Tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(btn.dataset.tab).classList.add('active');
+        });
+    });
+
+    // Dados
     function loadData() {
-        const storedPilots = localStorage.getItem("parapente_pilots");
-        if (storedPilots) {
-            pilots = JSON.parse(storedPilots);
-        } else {
-            pilots = [
-                { id: "1", name: "João Silva", cpf: "123.456.789-00", phone: "(11) 99999-1111", email: "joao@email.com", active: true },
-                { id: "2", name: "Maria Santos", cpf: "987.654.321-00", phone: "(11) 99999-2222", email: "maria@email.com", active: true },
-                { id: "3", name: "Pedro Costa", cpf: "456.789.123-00", phone: "(11) 99999-3333", email: "pedro@email.com", active: true }
-            ];
-            savePilots();
-        }
-
-        const storedTransactions = localStorage.getItem("parapente_transactions");
-        if (storedTransactions) {
-            transactions = JSON.parse(storedTransactions);
-        } else {
-            transactions = [
-                { id: "1", date: "2025-01-15", pilotId: "1", description: "Mensalidade Janeiro", category: "Mensalidade", type: "DESPESA", value: 150.00 },
-                { id: "2", date: "2025-01-20", pilotId: "2", description: "Inscrição Campeonato", category: "Inscrição", type: "DESPESA", value: 200.00 },
-                { id: "3", date: "2025-02-10", pilotId: "1", description: "Mensalidade Fevereiro", category: "Mensalidade", type: "DESPESA", value: 150.00 },
-                { id: "4", date: "2025-02-15", pilotId: "3", description: "Compra de Equipamento", category: "Equipamento", type: "DESPESA", value: 850.00 },
-                { id: "5", date: "2025-02-20", pilotId: "all", description: "Patrocínio", category: "Outros", type: "RECEITA", value: 500.00 },
-                { id: "6", date: "2025-03-01", pilotId: "1", description: "Mensalidade Março", category: "Mensalidade", type: "DESPESA", value: 150.00 },
-                { id: "7", date: "2025-03-05", pilotId: "2", description: "Mensalidade Março", category: "Mensalidade", type: "DESPESA", value: 150.00 },
-                { id: "8", date: "2025-03-10", pilotId: "3", description: "Manutenção Equipamento", category: "Manutenção", type: "DESPESA", value: 300.00 }
-            ];
-            saveTransactions();
-        }
-
+        pilots = JSON.parse(localStorage.getItem("parapente_pilots")) || [];
+        transactions = JSON.parse(localStorage.getItem("parapente_transactions")) || [];
+        
         renderPilots();
         renderPilotSelects();
         renderTransactions();
         updateDashboard();
         updateCategoryChart();
-        
-        const today = new Date();
-        const firstDay = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().slice(0,10);
-        const lastDay = today.toISOString().slice(0,10);
-        document.getElementById("txDate").valueAsDate = today;
-        document.getElementById("filterStart").value = firstDay;
-        document.getElementById("filterEnd").value = lastDay;
-        document.getElementById("reportStart").value = firstDay;
-        document.getElementById("reportEnd").value = lastDay;
-        
-        document.getElementById("syncStatus").innerHTML = '<i class="fas fa-check-circle"></i> Dados carregados';
     }
 
-    function savePilots() { localStorage.setItem("parapente_pilots", JSON.stringify(pilots)); }
-    function saveTransactions() { localStorage.setItem("parapente_transactions", JSON.stringify(transactions)); }
+    function saveData() {
+        localStorage.setItem("parapente_pilots", JSON.stringify(pilots));
+        localStorage.setItem("parapente_transactions", JSON.stringify(transactions));
+    }
 
-    // ==================== PILOTOS ====================
+    // Pilotos
     function renderPilots() {
         const tbody = document.querySelector("#pilotsTable tbody");
-        if (!tbody) return;
         tbody.innerHTML = '';
+        const isAdmin = currentUser.role === "admin";
         
-        const isAdmin = currentUser && currentUser.role === "admin";
-        
-        pilots.forEach(pilot => {
+        pilots.forEach(p => {
             const row = tbody.insertRow();
-            row.insertCell(0).innerHTML = pilot.name;
-            row.insertCell(1).innerHTML = pilot.cpf || '-';
-            row.insertCell(2).innerHTML = pilot.phone || '-';
-            row.insertCell(3).innerHTML = pilot.email || '-';
-            row.insertCell(4).innerHTML = `<span class="badge badge-piloto">Ativo</span>`;
-            
-            if (isAdmin) {
-                row.insertCell(5).innerHTML = `
-                    <button onclick="openEditPilotModal('${pilot.id}')" class="btn-warning" style="padding:5px 10px; margin-right:5px;"><i class="fas fa-edit"></i></button>
-                    <button onclick="deletePilot('${pilot.id}')" class="btn-danger" style="padding:5px 10px;"><i class="fas fa-trash"></i></button>
-                `;
-            } else {
-                row.insertCell(5).innerHTML = '-';
-            }
+            row.innerHTML = `
+                <td>${p.name}</td><td>${p.cpf}</td><td>${p.phone}</td><td>${p.email}</td>
+                <td><span class="badge badge-piloto">Ativo</span></td>
+                <td style="display: ${isAdmin ? 'table-cell' : 'none'}">
+                    <button onclick="openEditPilotModal('${p.id}')" class="btn-warning"><i class="fas fa-edit"></i></button>
+                    <button onclick="deletePilot('${p.id}')" class="btn-danger"><i class="fas fa-trash"></i></button>
+                </td>
+            `;
         });
-        
-        document.getElementById("pilotsCount").innerHTML = `Total: ${pilots.length} pilotos cadastrados`;
+        document.getElementById("pilotsCount").innerText = `Total: ${pilots.length}`;
     }
 
     function addPilot() {
-        if (currentUser.role !== "admin") { alert("Apenas administradores podem adicionar pilotos!"); return; }
-        
-        const name = document.getElementById("pilotName").value.trim();
-        if (!name) { alert("Informe o nome do piloto!"); return; }
-        
-        const newPilot = {
+        const p = {
             id: Date.now().toString(),
-            name: name,
-            cpf: document.getElementById("pilotCpf").value.trim(),
-            phone: document.getElementById("pilotPhone").value.trim(),
-            email: document.getElementById("pilotEmail").value.trim(),
-            active: true
+            name: document.getElementById("pilotName").value,
+            cpf: document.getElementById("pilotCpf").value,
+            phone: document.getElementById("pilotPhone").value,
+            email: document.getElementById("pilotEmail").value
         };
-        
-        pilots.push(newPilot);
-        savePilots();
+        if(!p.name) return alert("Nome obrigatório");
+        pilots.push(p);
+        saveData();
         renderPilots();
         renderPilotSelects();
-        
+        clearPilotForm();
+    }
+
+    function deletePilot(id) {
+        if(confirm("Excluir piloto?")) {
+            pilots = pilots.filter(p => p.id !== id);
+            saveData();
+            renderPilots();
+            renderPilotSelects();
+        }
+    }
+
+    function openEditPilotModal(id) {
+        const p = pilots.find(x => x.id === id);
+        currentEditPilotId = id;
+        document.getElementById("editName").value = p.name;
+        document.getElementById("editCpf").value = p.cpf;
+        document.getElementById("editPhone").value = p.phone;
+        document.getElementById("editEmail").value = p.email;
+        document.getElementById("editPilotModal").style.display = "flex";
+    }
+
+    function saveEditPilot() {
+        const p = pilots.find(x => x.id === currentEditPilotId);
+        p.name = document.getElementById("editName").value;
+        p.cpf = document.getElementById("editCpf").value;
+        p.phone = document.getElementById("editPhone").value;
+        p.email = document.getElementById("editEmail").value;
+        saveData();
+        renderPilots();
+        renderPilotSelects();
+        closeEditPilotModal();
+    }
+
+    function closeEditPilotModal() { document.getElementById("editPilotModal").style.display = "none"; }
+
+    function clearPilotForm() {
         document.getElementById("pilotName").value = "";
         document.getElementById("pilotCpf").value = "";
         document.getElementById("pilotPhone").value = "";
         document.getElementById("pilotEmail").value = "";
-        
-        showToast("Piloto cadastrado com sucesso!");
     }
 
-    function openEditPilotModal(id) {
-        const pilot = pilots.find(p => p.id === id);
-        if (!pilot) return;
-        currentEditPilotId = id;
-        document.getElementById("editName").value = pilot.name;
-        document.getElementById("editCpf").value = pilot.cpf || '';
-        document.getElementById("editPhone").value = pilot.phone || '';
-        document.getElementById("editEmail").value = pilot.email || '';
-        document.getElementById("editPilotModal").style.display = "flex";
-    }
-
-    function closeEditPilotModal() { document.getElementById("editPilotModal").style.display = "none"; currentEditPilotId = null; }
-
-    function saveEditPilot() {
-        const pilot = pilots.find(p => p.id === currentEditPilotId);
-        if (pilot) {
-            pilot.name = document.getElementById("editName").value;
-            pilot.cpf = document.getElementById("editCpf").value;
-            pilot.phone = document.getElementById("editPhone").value;
-            pilot.email = document.getElementById("editEmail").value;
-            savePilots();
-            renderPilots();
-            renderPilotSelects();
-            closeEditPilotModal();
-            showToast("Piloto atualizado!");
-        }
-    }
-
-    function deletePilot(id) {
-        if (currentUser.role !== "admin") { alert("Apenas administradores podem excluir pilotos!"); return; }
-        if (confirm("Excluir este piloto?")) {
-            transactions.forEach(t => { if (t.pilotId === id) t.pilotId = "all"; });
-            saveTransactions();
-            pilots = pilots.filter(p => p.id !== id);
-            savePilots();
-            renderPilots();
-            renderPilotSelects();
-            renderTransactions();
-            updateDashboard();
-            updateCategoryChart();
-            showToast("Piloto excluído!");
-        }
-    }
-
+    // Lançamentos
     function renderPilotSelects() {
-        const selects = ["txPilot", "filterPilot", "reportPilot", "dashboardPilotFilter", "editPilot"];
-        selects.forEach(selId => {
-            const sel = document.getElementById(selId);
-            if (!sel) return;
-            const currentValue = sel.value;
-            sel.innerHTML = '<option value="all">Geral (Todos)</option>';
-            pilots.forEach(pilot => { sel.innerHTML += `<option value="${pilot.id}">${pilot.name}</option>`; });
-            if (currentValue && (currentValue === "all" || pilots.some(p => p.id === currentValue))) sel.value = currentValue;
+        const selects = ["txPilot", "filterPilot", "dashboardPilotFilter", "reportPilot", "editPilotSelect"];
+        selects.forEach(id => {
+            const el = document.getElementById(id);
+            if(!el) return;
+            const currentVal = el.value;
+            el.innerHTML = id.includes("filter") || id.includes("dashboard") || id.includes("report") ? '<option value="all">Todos</option>' : '';
+            pilots.forEach(p => el.innerHTML += `<option value="${p.id}">${p.name}</option>`);
+            el.value = currentVal;
         });
-        const filterPilot = document.getElementById("filterPilot");
-        if (filterPilot) filterPilot.innerHTML = '<option value="">Todos</option>' + filterPilot.innerHTML;
     }
 
-    // ==================== LANÇAMENTOS ====================
     function saveTransaction() {
-        if (currentUser.role !== "admin") { alert("Apenas administradores podem adicionar lançamentos!"); return; }
-        
-        const date = document.getElementById("txDate").value;
-        const desc = document.getElementById("txDesc").value.trim();
-        const value = parseFloat(document.getElementById("txValue").value);
-        
-        if (!date || !desc || isNaN(value) || value <= 0) { alert("Preencha todos os campos obrigatórios!"); return; }
-        
-        const newTransaction = {
+        const t = {
             id: Date.now().toString(),
-            date: date,
+            date: document.getElementById("txDate").value,
             pilotId: document.getElementById("txPilot").value,
-            description: desc,
+            description: document.getElementById("txDesc").value,
             category: document.getElementById("txCategory").value,
             type: document.getElementById("txType").value,
-            value: value
+            value: parseFloat(document.getElementById("txValue").value)
         };
-        
-        transactions.push(newTransaction);
-        saveTransactions();
+        if(!t.date || isNaN(t.value)) return alert("Preencha os campos");
+        transactions.push(t);
+        saveData();
         renderTransactions();
         updateDashboard();
         updateCategoryChart();
-        
-        document.getElementById("txDesc").value = "";
-        document.getElementById("txValue").value = "";
-        showToast("Lançamento salvo!");
-    }
-
-    function openEditTransactionModal(id) {
-        const trans = transactions.find(t => t.id === id);
-        if (!trans) return;
-        currentEditTransactionId = id;
-        document.getElementById("editDate").value = trans.date;
-        document.getElementById("editPilot").value = trans.pilotId;
-        document.getElementById("editDesc").value = trans.description;
-        document.getElementById("editCategory").value = trans.category;
-        document.getElementById("editType").value = trans.type;
-        document.getElementById("editValue").value = trans.value;
-        document.getElementById("editTransactionModal").style.display = "flex";
-    }
-
-    function closeEditTransactionModal() { document.getElementById("editTransactionModal").style.display = "none"; currentEditTransactionId = null; }
-
-    function saveEditTransaction() {
-        const trans = transactions.find(t => t.id === currentEditTransactionId);
-        if (trans) {
-            trans.date = document.getElementById("editDate").value;
-            trans.pilotId = document.getElementById("editPilot").value;
-            trans.description = document.getElementById("editDesc").value;
-            trans.category = document.getElementById("editCategory").value;
-            trans.type = document.getElementById("editType").value;
-            trans.value = parseFloat(document.getElementById("editValue").value);
-            saveTransactions();
-            renderTransactions();
-            updateDashboard();
-            updateCategoryChart();
-            closeEditTransactionModal();
-            showToast("Lançamento atualizado!");
-        }
-    }
-
-    function deleteTransaction(id) {
-        if (currentUser.role !== "admin") { alert("Apenas administradores podem excluir lançamentos!"); return; }
-        if (confirm("Excluir este lançamento?")) {
-            transactions = transactions.filter(t => t.id !== id);
-            saveTransactions();
-            renderTransactions();
-            updateDashboard();
-            updateCategoryChart();
-            showToast("Lançamento excluído!");
-        }
-    }
-
-    function getPilotName(pilotId) {
-        if (pilotId === "all") return "Geral";
-        const pilot = pilots.find(p => p.id === pilotId);
-        return pilot ? pilot.name : "Desconhecido";
     }
 
     function renderTransactions() {
-        let filtered = [...transactions];
-        const start = document.getElementById("filterStart").value;
-        const end = document.getElementById("filterEnd").value;
-        const pilotId = document.getElementById("filterPilot").value;
-        const tipo = document.getElementById("filterType").value;
-        const categoria = document.getElementById("filterCategory").value;
-        
-        if (start) filtered = filtered.filter(t => t.date >= start);
-        if (end) filtered = filtered.filter(t => t.date <= end);
-        if (pilotId) filtered = filtered.filter(t => t.pilotId === pilotId);
-        if (tipo) filtered = filtered.filter(t => t.type === tipo);
-        if (categoria) filtered = filtered.filter(t => t.category === categoria);
-        filtered.sort((a,b) => b.date.localeCompare(a.date));
-        
-        // Cálculo do saldo: Receitas (+) menos Despesas (-)
-        const totalReceitas = filtered.filter(t => t.type === "RECEITA").reduce((sum, t) => sum + t.value, 0);
-        const totalDespesas = filtered.filter(t => t.type === "DESPESA").reduce((sum, t) => sum + t.value, 0);
-        const saldo = totalReceitas - totalDespesas;
-        
-        document.getElementById("totalFiltrado").innerHTML = `💰 Saldo Total: R$ ${saldo.toFixed(2)} (Receitas: R$ ${totalReceitas.toFixed(2)} | Despesas: R$ ${totalDespesas.toFixed(2)})`;
-        
         const tbody = document.querySelector("#transTable tbody");
-        const isAdmin = currentUser && currentUser.role === "admin";
-        
-        if (tbody) {
-            tbody.innerHTML = '';
-            filtered.forEach(t => {
-                const row = tbody.insertRow();
-                row.insertCell(0).innerHTML = t.date.split('-').reverse().join('/');
-                row.insertCell(1).innerHTML = getPilotName(t.pilotId);
-                row.insertCell(2).innerHTML = t.description;
-                row.insertCell(3).innerHTML = t.category;
-                row.insertCell(4).innerHTML = `<span style="color:${t.type === 'RECEITA' ? '#27ae60' : '#c0392b'}">R$ ${t.value.toFixed(2)}</span>`;
-                row.insertCell(5).innerHTML = `<span class="badge ${t.type === 'RECEITA' ? 'badge-receita' : 'badge-despesa'}">${t.type === 'RECEITA' ? 'Receita' : 'Despesa'}</span>`;
-                if (isAdmin) {
-                    row.insertCell(6).innerHTML = `
-                        <button onclick="openEditTransactionModal('${t.id}')" class="btn-warning" style="padding:5px 10px; margin-right:5px;"><i class="fas fa-edit"></i></button>
-                        <button onclick="deleteTransaction('${t.id}')" class="btn-danger" style="padding:5px 10px;"><i class="fas fa-trash"></i></button>
-                    `;
-                }
-            });
-        }
-        
-        const recentTbody = document.querySelector("#recentTable tbody");
-        if (recentTbody) {
-            recentTbody.innerHTML = '';
-            filtered.slice(0, 10).forEach(t => {
-                recentTbody.innerHTML += `
-                    <tr>
-                        <td>${t.date.split('-').reverse().join('/')}79
-                        <td>${getPilotName(t.pilotId)}79
-                        <td>${t.description}79
-                        <td>${t.category}79
-                        <td style="color:${t.type === 'RECEITA' ? '#27ae60' : '#c0392b'}">R$ ${t.value.toFixed(2)}79
-                        <td><span class="badge ${t.type === 'RECEITA' ? 'badge-receita' : 'badge-despesa'}">${t.type === 'RECEITA' ? 'Receita' : 'Despesa'}</span>79
-                    `
-                );
-            });
+        tbody.innerHTML = '';
+        const isAdmin = currentUser.role === "admin";
+        let total = 0;
+
+        transactions.forEach(t => {
+            const p = pilots.find(x => x.id === t.pilotId);
+            const row = tbody.insertRow();
+            const val = t.type === "RECEITA" ? t.value : -t.value;
+            total += val;
+
+            row.innerHTML = `
+                <td>${t.date}</td><td>${p ? p.name : 'N/A'}</td><td>${t.description}</td><td>${t.category}</td>
+                <td>R$ ${t.value.toFixed(2)}</td>
+                <td><span class="badge ${t.type === 'RECEITA' ? 'badge-receita' : 'badge-despesa'}">${t.type}</span></td>
+                <td style="display: ${isAdmin ? 'table-cell' : 'none'}">
+                    <button onclick="openEditTransactionModal('${t.id}')" class="btn-warning"><i class="fas fa-edit"></i></button>
+                    <button onclick="deleteTransaction('${t.id}')" class="btn-danger"><i class="fas fa-trash"></i></button>
+                </td>
+            `;
+        });
+        document.getElementById("totalFiltrado").innerText = `💰 Saldo Total: R$ ${total.toFixed(2)}`;
+        renderRecent();
+    }
+
+    function renderRecent() {
+        const tbody = document.querySelector("#recentTable tbody");
+        tbody.innerHTML = '';
+        transactions.slice(-5).reverse().forEach(t => {
+            const p = pilots.find(x => x.id === t.pilotId);
+            tbody.innerHTML += `<tr><td>${t.date}</td><td>${p ? p.name : 'N/A'}</td><td>${t.description}</td><td>${t.category}</td><td>R$ ${t.value.toFixed(2)}</td><td>${t.type}</td></tr>`;
+        });
+    }
+
+    function deleteTransaction(id) {
+        if(confirm("Excluir lançamento?")) {
+            transactions = transactions.filter(t => t.id !== id);
+            saveData();
+            renderTransactions();
+            updateDashboard();
+            updateCategoryChart();
         }
     }
 
-    function applyFilters() { renderTransactions(); }
-    
-    function clearFilters() {
-        const today = new Date();
-        const firstDay = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().slice(0,10);
-        const todayStr = today.toISOString().slice(0,10);
-        document.getElementById("filterStart").value = firstDay;
-        document.getElementById("filterEnd").value = todayStr;
-        document.getElementById("filterPilot").value = "";
-        document.getElementById("filterType").value = "";
-        document.getElementById("filterCategory").value = "";
+    function openEditTransactionModal(id) {
+        const t = transactions.find(x => x.id === id);
+        currentEditTransactionId = id;
+        document.getElementById("editDate").value = t.date;
+        document.getElementById("editPilotSelect").value = t.pilotId;
+        document.getElementById("editDesc").value = t.description;
+        document.getElementById("editCategory").value = t.category;
+        document.getElementById("editType").value = t.type;
+        document.getElementById("editValue").value = t.value;
+        document.getElementById("editTransactionModal").style.display = "flex";
+    }
+
+    function saveEditTransaction() {
+        const t = transactions.find(x => x.id === currentEditTransactionId);
+        t.date = document.getElementById("editDate").value;
+        t.pilotId = document.getElementById("editPilotSelect").value;
+        t.description = document.getElementById("editDesc").value;
+        t.category = document.getElementById("editCategory").value;
+        t.type = document.getElementById("editType").value;
+        t.value = parseFloat(document.getElementById("editValue").value);
+        saveData();
         renderTransactions();
+        updateDashboard();
+        updateCategoryChart();
+        closeEditTransactionModal();
     }
 
-    // ==================== DASHBOARD ====================
+    function closeEditTransactionModal() { document.getElementById("editTransactionModal").style.display = "none"; }
+
+    // Dashboard & Gráficos
     function updateDashboard() {
         const year = document.getElementById("yearFilter").value;
-        const pilotFilter = document.getElementById("dashboardPilotFilter").value;
+        const pilotId = document.getElementById("dashboardPilotFilter").value;
         
         let filtered = transactions.filter(t => t.date.startsWith(year));
-        if (pilotFilter !== "all") filtered = filtered.filter(t => t.pilotId === pilotFilter);
-        
-        const receitas = filtered.filter(t => t.type === "RECEITA").reduce((s,t) => s + t.value, 0);
-        const despesas = filtered.filter(t => t.type === "DESPESA").reduce((s,t) => s + t.value, 0);
-        const saldo = receitas - despesas;
-        
-        document.getElementById("totalRevenue").innerHTML = `R$ ${receitas.toFixed(2)}`;
-        document.getElementById("totalExpense").innerHTML = `R$ ${despesas.toFixed(2)}`;
-        document.getElementById("totalBalance").innerHTML = `R$ ${saldo.toFixed(2)}`;
-        
-        const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
-        const receitasMensais = [];
-        const despesasMensais = [];
-        
-        for (let i = 1; i <= 12; i++) {
-            const mes = i.toString().padStart(2, '0');
-            const rec = filtered.filter(t => t.date.substring(5,7) === mes && t.type === "RECEITA").reduce((s,t) => s + t.value, 0);
-            const desp = filtered.filter(t => t.date.substring(5,7) === mes && t.type === "DESPESA").reduce((s,t) => s + t.value, 0);
-            receitasMensais.push(rec);
-            despesasMensais.push(desp);
-        }
-        
+        if(pilotId !== 'all') filtered = filtered.filter(t => t.pilotId === pilotId);
+
+        const rev = filtered.filter(t => t.type === "RECEITA").reduce((a, b) => a + b.value, 0);
+        const exp = filtered.filter(t => t.type === "DESPESA").reduce((a, b) => a + b.value, 0);
+
+        document.getElementById("totalRevenue").innerText = `R$ ${rev.toFixed(2)}`;
+        document.getElementById("totalExpense").innerText = `R$ ${exp.toFixed(2)}`;
+        document.getElementById("totalBalance").innerText = `R$ ${(rev - exp).toFixed(2)}`;
+
+        renderMonthlyChart(filtered);
+    }
+
+    function renderMonthlyChart(data) {
         const ctx = document.getElementById('monthlyChart').getContext('2d');
-        if (monthlyChart) monthlyChart.destroy();
+        const months = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+        const revs = Array(12).fill(0);
+        const exps = Array(12).fill(0);
+
+        data.forEach(t => {
+            const m = parseInt(t.date.split("-")[1]) - 1;
+            if(t.type === "RECEITA") revs[m] += t.value;
+            else exps[m] += t.value;
+        });
+
+        if(monthlyChart) monthlyChart.destroy();
         monthlyChart = new Chart(ctx, {
             type: 'bar',
-            data: { labels: meses, datasets: [{ label: 'Receitas', data: receitasMensais, backgroundColor: '#27ae60' }, { label: 'Despesas', data: despesasMensais, backgroundColor: '#c0392b' }] },
-            options: { responsive: true, scales: { y: { beginAtZero: true, ticks: { callback: v => `R$ ${v}` } } } }
+            data: {
+                labels: months,
+                datasets: [
+                    { label: 'Receitas', data: revs, backgroundColor: '#27ae60' },
+                    { label: 'Despesas', data: exps, backgroundColor: '#c0392b' }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
         });
     }
 
-    // ==================== RELATÓRIOS ====================
     function updateCategoryChart() {
-        const start = document.getElementById("reportStart").value;
-        const end = document.getElementById("reportEnd").value;
-        const pilotId = document.getElementById("reportPilot").value;
-        
-        let filtered = [...transactions];
-        if (start) filtered = filtered.filter(t => t.date >= start);
-        if (end) filtered = filtered.filter(t => t.date <= end);
-        if (pilotId !== "all") filtered = filtered.filter(t => t.pilotId === pilotId);
-        
-        const despesasPorCategoria = {};
-        filtered.filter(t => t.type === "DESPESA").forEach(t => { despesasPorCategoria[t.category] = (despesasPorCategoria[t.category] || 0) + t.value; });
-        
         const ctx = document.getElementById('categoryChart').getContext('2d');
-        if (categoryChart) categoryChart.destroy();
+        const cats = {};
+        transactions.filter(t => t.type === "DESPESA").forEach(t => {
+            cats[t.category] = (cats[t.category] || 0) + t.value;
+        });
+
+        if(categoryChart) categoryChart.destroy();
         categoryChart = new Chart(ctx, {
             type: 'pie',
-            data: { labels: Object.keys(despesasPorCategoria), datasets: [{ data: Object.values(despesasPorCategoria), backgroundColor: ['#27ae60','#2980b9','#f39c12','#e67e22','#c0392b','#3498db'] }] },
-            options: { responsive: true }
+            data: {
+                labels: Object.keys(cats),
+                datasets: [{ data: Object.values(cats), backgroundColor: ['#1a472a', '#27ae60', '#2980b9', '#f39c12', '#c0392b', '#9b59b6'] }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
         });
     }
 
-    // ==================== EXPORTAÇÕES ====================
     function exportToExcel() {
-        const start = document.getElementById("reportStart").value;
-        const end = document.getElementById("reportEnd").value;
-        const pilotId = document.getElementById("reportPilot").value;
-        
-        let filtered = [...transactions];
-        if (start) filtered = filtered.filter(t => t.date >= start);
-        if (end) filtered = filtered.filter(t => t.date <= end);
-        if (pilotId !== "all") filtered = filtered.filter(t => t.pilotId === pilotId);
-        
-        const data = filtered.map(t => ({ Data: t.date, Piloto: getPilotName(t.pilotId), Descrição: t.description, Categoria: t.category, Tipo: t.type === "RECEITA" ? "Receita" : "Despesa", Valor: t.value }));
-        const ws = XLSX.utils.json_to_sheet(data);
+        const ws = XLSX.utils.json_to_sheet(transactions);
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Lançamentos");
-        XLSX.writeFile(wb, `parapente_${new Date().toISOString().slice(0,10)}.xlsx`);
-        showToast("Exportado para Excel!");
+        XLSX.utils.book_append_sheet(wb, ws, "Lancamentos");
+        XLSX.writeFile(wb, "Relatorio_Parapente.xlsx");
     }
-
-    function exportToJSON() {
-        const start = document.getElementById("reportStart").value;
-        const end = document.getElementById("reportEnd").value;
-        const pilotId = document.getElementById("reportPilot").value;
-        
-        let filtered = [...transactions];
-        if (start) filtered = filtered.filter(t => t.date >= start);
-        if (end) filtered = filtered.filter(t => t.date <= end);
-        if (pilotId !== "all") filtered = filtered.filter(t => t.pilotId === pilotId);
-        
-        const dataStr = JSON.stringify(filtered, null, 2);
-        const blob = new Blob([dataStr], {type:"application/json"});
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = `parapente_${new Date().toISOString().slice(0,10)}.json`;
-        a.click();
-        URL.revokeObjectURL(url);
-        showToast("Exportado para JSON!");
-    }
-
-    function showToast(msg) {
-        const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.innerHTML = `<i class="fas fa-check-circle"></i> ${msg}`;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
-    }
-
-    // Tabs
-    document.querySelectorAll(".tab-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-            document.querySelectorAll(".tab-content").forEach(tc => tc.classList.remove("active"));
-            btn.classList.add("active");
-            document.getElementById(btn.getAttribute("data-tab")).classList.add("active");
-            if (btn.getAttribute("data-tab") === "dashboard") updateDashboard();
-            if (btn.getAttribute("data-tab") === "reports") updateCategoryChart();
-        });
-    });
-    
-    document.getElementById("reportStart").addEventListener("change", () => updateCategoryChart());
-    document.getElementById("reportEnd").addEventListener("change", () => updateCategoryChart());
-    document.getElementById("reportPilot").addEventListener("change", () => updateCategoryChart());
 </script>
+
 </body>
 </html>
