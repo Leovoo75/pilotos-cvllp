@@ -637,7 +637,7 @@
 </div>
 
 <script>
-    // Configuração de usuários
+    // Configuração de usuários - SENHAS NÃO SÃO EXIBIDAS EM NENHUM LUGAR
     const USERS = {
         admin: { password: "1234", name: "Administrador", role: "admin" },
         pilot: { password: "5678", name: "Piloto", role: "pilot" }
@@ -664,7 +664,7 @@
             applyPermissions();
             loadData();
         } else {
-            alert("Senha incorreta!");
+            alert("Senha incorreta! Tente novamente.");
             document.getElementById("pinInput").value = "";
             document.getElementById("pinInput").focus();
         }
@@ -995,14 +995,14 @@
             filtered.slice(0, 10).forEach(t => {
                 recentTbody.innerHTML += `
                     <tr>
-                        <td>${t.date.split('-').reverse().join('/')}</td>
-                        <td>${getPilotName(t.pilotId)}</td>
-                        <td>${t.description}</td>
-                        <td>${t.category}</td>
-                        <td style="color:${t.type === 'RECEITA' ? '#27ae60' : '#c0392b'}">R$ ${t.value.toFixed(2)}</td>
-                        <td><span class="badge ${t.type === 'RECEITA' ? 'badge-receita' : 'badge-despesa'}">${t.type === 'RECEITA' ? 'Receita' : 'Despesa'}</span></td>
-                    </tr>
-                `;
+                        <td>${t.date.split('-').reverse().join('/')}79
+                        <td>${getPilotName(t.pilotId)}79
+                        <td>${t.description}79
+                        <td>${t.category}79
+                        <td style="color:${t.type === 'RECEITA' ? '#27ae60' : '#c0392b'}">R$ ${t.value.toFixed(2)}79
+                        <td><span class="badge ${t.type === 'RECEITA' ? 'badge-receita' : 'badge-despesa'}">${t.type === 'RECEITA' ? 'Receita' : 'Despesa'}</span>79
+                    `
+                );
             });
         }
     }
