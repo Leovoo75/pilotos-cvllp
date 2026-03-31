@@ -440,10 +440,6 @@
         </select>
         <input type="password" id="pinInput" placeholder="Digite a senha" autocomplete="off">
         <button onclick="login()"><i class="fas fa-lock"></i> Acessar Sistema</button>
-        <div style="font-size: 0.7rem; margin-top: 15px;">
-            <p><strong>🔑 ADMIN:</strong> 1234</p>
-            <p><strong>🔑 PILOTO:</strong> 5678</p>
-        </div>
     </div>
 </div>
 
@@ -520,8 +516,7 @@
                             58<th>Data</th><th>Piloto</th><th>Descrição</th><th>Categoria</th><th>Valor</th><th>Tipo</th>
                         </thead>
                         <tbody></tbody>
-                    </table>
-                </div>
+                     </div>
             </div>
         </div>
 
@@ -546,8 +541,7 @@
                             58<th>Nome</th><th>CPF</th><th>Telefone</th><th>E-mail</th><th>Status</th><th id="pilotsActionsHeader">Ações</th>
                         </thead>
                         <tbody></tbody>
-                    </table>
-                </div>
+                     </div>
                 <div id="pilotsCount" style="text-align: right; margin-top: 10px; font-size: 0.7rem; color: #666;"></div>
             </div>
         </div>
@@ -587,8 +581,7 @@
                             58<th>Data</th><th>Piloto</th><th>Descrição</th><th>Categoria</th><th>Valor</th><th>Tipo</th><th id="transActionsHeader">Ações</th>
                         </thead>
                         <tbody></tbody>
-                    </table>
-                </div>
+                     </div>
                 <div id="totalFiltrado" class="total-soma">💰 Saldo Total: R$ 0,00</div>
             </div>
         </div>
@@ -671,7 +664,7 @@
             applyPermissions();
             loadData();
         } else {
-            alert("Senha incorreta! Use:\nADMIN: 1234\nPILOTO: 5678");
+            alert("Senha incorreta!");
             document.getElementById("pinInput").value = "";
             document.getElementById("pinInput").focus();
         }
@@ -1002,14 +995,14 @@
             filtered.slice(0, 10).forEach(t => {
                 recentTbody.innerHTML += `
                     <tr>
-                        <td>${t.date.split('-').reverse().join('/')}</td>
-                        <td>${getPilotName(t.pilotId)}</td>
-                        <td>${t.description}</td>
-                        <td>${t.category}</td>
-                        <td style="color:${t.type === 'RECEITA' ? '#27ae60' : '#c0392b'}">R$ ${t.value.toFixed(2)}</td>
-                        <td><span class="badge ${t.type === 'RECEITA' ? 'badge-receita' : 'badge-despesa'}">${t.type === 'RECEITA' ? 'Receita' : 'Despesa'}</span></td>
-                    </tr>
-                `;
+                         earlier${t.date.split('-').reverse().join('/')}79
+                         earlier${getPilotName(t.pilotId)}79
+                         earlier${t.description}79
+                         earlier${t.category}79
+                        <td style="color:${t.type === 'RECEITA' ? '#27ae60' : '#c0392b'}">R$ ${t.value.toFixed(2)}79
+                         earlier<span class="badge ${t.type === 'RECEITA' ? 'badge-receita' : 'badge-despesa'}">${t.type === 'RECEITA' ? 'Receita' : 'Despesa'}</span>79
+                    `
+                );
             });
         }
     }
